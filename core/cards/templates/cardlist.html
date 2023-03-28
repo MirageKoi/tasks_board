@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+    {% for object in object_list %}
+        <div>
+            <a href="{{ object.pk }}">{{ object.title }}</a>
+                {{ object.description }}
+                {{ object.price }}
+            </div>
+        {% endfor %}
+    <hr/>
+    {% comment %} <a href="{% url "store:create" %}">Create New</a> {% endcomment %}
+{% endblock content %}

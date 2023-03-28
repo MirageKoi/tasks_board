@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+{{ object.title }}
+{{ object.text }}
+{{ object.category }}
+{{ object.creator }}
+{{ object.implementor }}
+{{ object.created }}
+{{ object.updated }}
+
+{% comment %} <form method="post" action="{% url "purchase:purchase_add" object.slug %}">
+{% csrf_token %}
+{{ object }}
+{{ form.quant }}
+
+<button type="submit">Send</button>
+</form>
+
+{% if user.is_superuser %}
+<a href="{% url "store:update" slug=object.slug %}">EDIT</a>
+{% endif %} {% endcomment %}
+
+{% endblock content %}
