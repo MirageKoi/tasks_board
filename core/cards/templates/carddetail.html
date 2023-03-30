@@ -3,13 +3,14 @@
 {% block content %}
 
 
-{{ object.title }}
-{{ object.text }}
-{{ object.category }}
-{{ object.creator }}
-{{ object.implementor }}
-{{ object.created }}
-{{ object.updated }}
+{{ object.title }}<br>
+{{ object.text }}<br>
+{{ object.status }}<br>
+{{ object.creator }}<br>
+{{ object.implementor }}<br>
+{{ object.created }}<br>
+{{ object.updated }}<br>
+
 
 {% comment %} <form method="post" action="{% url "purchase:purchase_add" object.slug %}">
 {% csrf_token %}
@@ -17,10 +18,17 @@
 {{ form.quant }}
 
 <button type="submit">Send</button>
-</form>
+</form> {% endcomment %}
 
-{% if user.is_superuser %}
-<a href="{% url "store:update" slug=object.slug %}">EDIT</a>
-{% endif %} {% endcomment %}
+
+<a href="{% url "cards:update" object.pk %}">EDIT</a>
+<a href="{% url 'cards:delete' object.pk  %}">DELETE </a>
+<br>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update Status">
+  </form>
 
 {% endblock content %}

@@ -1,19 +1,26 @@
 from django.db import models
 
 
-class CategoryModel(models.Model):
-    title = models.CharField(max_length=64)
+# class CategoryModel(models.Model):
+#     title = models.CharField(max_length=64)
 
-    def __str__(self) -> str:
-        return self.title
+#     def __str__(self) -> str:
+#         return self.title
 
-    
+checker = ['New', 'In progress', 'In QA', 'Ready', 'Done']    
 class CardModel(models.Model):
+    STATUS_CHOICES = [
+        ('New', 'New'),
+        ('In progress', 'In progress'),
+        ('In QA', 'In QA'),
+        ('Ready', 'Ready'),
+        ('Done', 'Done'),
+    ]
     title = models.CharField(max_length=64)
     text = models.TextField()
-    category = models.ForeignKey(CategoryModel, on_delete=models.CASCADE)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='New')
     creator = models.ForeignKey('users.UserModel', related_name='cards', on_delete=models.CASCADE)
-    implementor = models.ForeignKey('users.UserModel', related_name='implementors', on_delete=models.PROTECT, default=None)
+    implementor = models.ForeignKey('users.UserModel', related_name='implementors', on_delete=models.SET_NULL, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

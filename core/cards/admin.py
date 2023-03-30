@@ -1,6 +1,5 @@
 from django.contrib import admin
-from . models import CategoryModel, CardModel
+from . models import CardModel
 
 
-admin.site.register(CategoryModel)
 admin.site.register(CardModel)

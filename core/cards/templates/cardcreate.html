@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form method="post">
+
+<h1>Create a new task</h1>
+  <form method="post">
     {% csrf_token %}
-{{ form }}
-<button>create</button>
-</form>
+    {{ form.as_p }}
+    <input type="submit" value="Create">
+  </form>
+
 {% endblock content %}
+
+
