@@ -25,7 +25,7 @@
 <a href="{% url 'cards:delete' object.pk  %}">DELETE </a>
 <br>
 
-<form method="post">
+<form method="post" action="{% url 'cards:status' object.pk %}"">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Update Status">
