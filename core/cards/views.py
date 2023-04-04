@@ -8,7 +8,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 
 from django.views.generic.edit import BaseUpdateView, FormView, ProcessFormView, FormMixin
 
-from .forms import AdminCardUpdateForm, CardCreateForm, UserCardUpdateForm, UserCardStatusUpdate,  AdminCardStatusUpdate, CardStatusUpdate
+from .forms import  CardCreateForm, UserCardStatusUpdate,  AdminCardStatusUpdate, CardStatusUpdate, CardUpdateForm
 from .models import CardModel
 from .permissions import IsCreatorOrSuperUserCheck, IsSuperUser, IsCreator
 
@@ -60,21 +60,26 @@ class CardCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
     
 
-class CardUpdateView(UpdateView, IsCreatorOrSuperUserCheck):
+class CardUpdateView(IsCreatorOrSuperUserCheck, UpdateView):
     model = CardModel
-    
+    form_class = CardUpdateForm
     template_name = 'cardcreate.html'
     success_url = reverse_lazy('cards:cardlist')
 
-    def get_form_class(self):
-        if self.request.user.is_superuser:
-            self.form_class = AdminCardUpdateForm
-        else:
-            self.form_class = UserCardUpdateForm
-        return super().get_form_class()
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user.is_superuser
+        return kwargs
+
+    # def get_form_class(self):
+    #     if self.request.user.is_superuser:
+    #         self.form_class = AdminCardUpdateForm
+    #     else:
+    #         self.form_class = UserCardUpdateForm
+    #     return super().get_form_class()
     
 
-class CardDeleteView(DeleteView, IsSuperUser):
+class CardDeleteView(IsSuperUser, DeleteView):
     model = CardModel
     template_name = 'task_confirm_delete.html'
     success_url = reverse_lazy('cards:cardlist')
@@ -84,6 +89,7 @@ class CardDeleteView(DeleteView, IsSuperUser):
         return super(CardDeleteView,self).form_valid(form)
     
 
+# View for changing card status
 class CardStatusUpdate(BaseUpdateView):
     http_method_names = ['post']
     model = CardModel

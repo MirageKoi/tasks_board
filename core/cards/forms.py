@@ -18,18 +18,28 @@ class CardCreateForm(forms.ModelForm):
             self.fields['implementor'].queryset = User.objects.filter(id=user.id)
 
 
-class AdminCardUpdateForm(forms.ModelForm):
-
+class CardUpdateForm(forms.ModelForm):
     class Meta:
         model = CardModel
         fields = ['text', 'implementor']
 
+    def __init__(self, *args, **kwargs): 
+        user = kwargs.pop('user', None)   
+        super().__init__(*args, **kwargs)
+        if not user:
+            del self.fields['implementor']
+# class AdminCardUpdateForm(forms.ModelForm):
 
-class UserCardUpdateForm(forms.ModelForm):
+#     class Meta:
+#         model = CardModel
+#         fields = ['text', 'implementor']
 
-    class Meta:
-        model = CardModel
-        fields = ['text']
+
+# class UserCardUpdateForm(forms.ModelForm):
+
+#     class Meta:
+#         model = CardModel
+#         fields = ['text']
 
 # TODO обьеденить два вержних класса в один. добавить условие IF admin or not. Попробовать через инит. Добавить имлементора
 
