@@ -24,11 +24,13 @@
 <a href="{% url "cards:update" object.pk %}">EDIT</a>
 <a href="{% url 'cards:delete' object.pk  %}">DELETE </a>
 <br>
-
+{{ message }}
+{% if not message and not denied %}
 <form method="post" action="{% url 'cards:status' object.pk %}"">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Update Status">
   </form>
+{% endif %}
 
 {% endblock content %}

@@ -29,9 +29,18 @@ class CardDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         if self.request.user.is_superuser:
-            kwargs['form'] = AdminCardStatusUpdate(instance=self.object)
+            if self.object.status in ('Ready', 'Done'):
+                kwargs['form'] = AdminCardStatusUpdate(instance=self.object)
+            else:
+                kwargs['message'] = 'Task is not Ready'
+        
+        elif self.request.user == self.object.implementor:
+            if self.object.status != 'Done':
+                kwargs['form'] = UserCardStatusUpdate(instance=self.object)
+            else:
+                kwargs['message'] = 'Task is complete'
         else:
-            kwargs['form'] = UserCardStatusUpdate(instance=self.object)
+            kwargs['denied'] = True
         return super().get_context_data(**kwargs)
 
 
@@ -43,10 +52,7 @@ class CardCreateView(LoginRequiredMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(CardCreateView, self).get_form_kwargs()
-        if not self.request.user.is_superuser:
-            kwargs['implementor'] = self.request.user
-        else:
-            kwargs['implementor'] = None
+        kwargs['implementor'] = self.request.user
         return kwargs
 
     def form_valid(self, form):
@@ -56,6 +62,7 @@ class CardCreateView(LoginRequiredMixin, CreateView):
 
 class CardUpdateView(UpdateView, IsCreatorOrSuperUserCheck):
     model = CardModel
+    
     template_name = 'cardcreate.html'
     success_url = reverse_lazy('cards:cardlist')
 
@@ -81,20 +88,10 @@ class CardStatusUpdate(BaseUpdateView):
     http_method_names = ['post']
     model = CardModel
     form_class = CardStatusUpdate
+    success_url = reverse_lazy('cards:cardlist')
 
     def get_form_kwargs(self):
         kwargs = super(CardStatusUpdate, self).get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
-    
-    # def get_form_class(self):
-    #     if self.request.user.is_superuser:
-    #         self.form_class = AdminCardStatusUpdate
-    #     else:
-    #         self.form_class = UserCardStatusUpdate
-    #     return super().get_form_class()
-    
-    def get_success_url(self):
-        object_id = self.kwargs[self.pk_url_kwarg]
-        return reverse_lazy('cards:detail', kwargs={'pk': object_id})
     

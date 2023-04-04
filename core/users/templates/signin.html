@@ -12,7 +12,12 @@
         {{ form.as_div }}
         {% csrf_token %}
         <button type="submit">submit</button>
+        
         </form>
+        
     </div>
+    <div class="text-center mb-3">
+        Have no account?&nbsp;<a href=" {% url 'users:signup' %}" class="text-decoration-none">Sign Up!</a>
+      </div>
 </body>
 </html>

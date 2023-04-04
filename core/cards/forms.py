@@ -12,10 +12,10 @@ class CardCreateForm(forms.ModelForm):
         exclude = ['creator', 'status', 'created', 'updated']
 
     def __init__(self, *args, **kwargs):
-        current_user = kwargs.pop('implementor', None)
+        user = kwargs.pop('implementor', None)
         super(CardCreateForm, self).__init__(*args, **kwargs)
-        if current_user:
-            self.fields['implementor'].queryset = User.objects.filter(id=current_user.id)
+        if not user.is_superuser:
+            self.fields['implementor'].queryset = User.objects.filter(id=user.id)
 
 
 class AdminCardUpdateForm(forms.ModelForm):
@@ -53,6 +53,7 @@ class AdminCardStatusUpdate(forms.ModelForm):
 class CardStatusUpdate(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
+        
         user = kwargs.pop('user', None)
         super(CardStatusUpdate, self).__init__(*args, **kwargs)
         

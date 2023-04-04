@@ -48,6 +48,8 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
+    'users.middleware.NonAdminSessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -128,3 +130,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.UserModel'
 
 LOGIN_REDIRECT_URL = "homepage"
+
+LOGIN_URL = '/signin/'
+
+REGISTER_URL = '/signup/'
+
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE = 1 # set just 10 seconds to test
+# SESSION_SAVE_EVERY_REQUEST = True
+
+NON_ADMIN_SESSION_EXPIRE_SECONDS = 222

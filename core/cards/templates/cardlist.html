@@ -1,13 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
-    {% for object in object_list %}
+    {% comment %} {% for object in object_list %}
         <div>
-            <a href="{{ object.pk }}">{{ object.title }}</a>
+            <a href="{{ object.pk }}"><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></a>
                 {{ object.description }}
                 {{ object.price }}
             </div>
         {% endfor %}
-    <hr/>
+    <hr/> {% endcomment %}
     
-    {% comment %} <a href="{% url "store:create" %}">Create New</a> {% endcomment %}
+    <div class="container">
+        <div class="row">
+          <div class="col " >
+            <h2>New</h2>
+            {% for object in object_list %}
+              {% if object.status == 'New' %}
+                <p><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></p>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="col " >
+            <h2>In progress</h2>
+            {% for object in object_list %}
+              {% if object.status == 'In progress' %}
+                <p><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></p>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="col " >
+            <h2>In QA</h2>
+            {% for object in object_list %}
+              {% if object.status == 'In QA' %}
+                <p><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></p>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="col " >
+            <h2>Ready</h2>
+            {% for object in object_list %}
+              {% if object.status == 'Ready' %}
+                <p><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></p>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="col " >
+            <h2>Done</h2>
+            {% for object in object_list %}
+              {% if object.status == 'Done' %}
+                <p><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></p>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+    <a href="{% url "cards:create" %}">Create New</a>
 {% endblock content %}
