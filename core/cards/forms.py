@@ -43,22 +43,37 @@ class CardUpdateForm(forms.ModelForm):
 
 # TODO обьеденить два вержних класса в один. добавить условие IF admin or not. Попробовать через инит. Добавить имлементора
 
-class UserCardStatusUpdate(forms.ModelForm):
+# class UserCardStatusUpdate(forms.ModelForm):
         
-    status = forms.ChoiceField(choices=[('In progress', 'In progress'), ('In QA', 'In QA'), ('Ready', 'Ready')], required=True)   
+#     status = forms.ChoiceField(choices=[('In progress', 'In progress'), ('In QA', 'In QA'), ('Ready', 'Ready')], required=True)   
+    
+#     class Meta:
+#         model = CardModel
+#         fields = ['status']
+
+
+class HelperCardStatusUpdate(forms.ModelForm):
+        
+    # status = forms.ChoiceField(choices=[('Ready', 'Ready'), ('Done', 'Done')], required=True)   
     
     class Meta:
         model = CardModel
         fields = ['status']
 
-
-class AdminCardStatusUpdate(forms.ModelForm):
-        
-    status = forms.ChoiceField(choices=[('Ready', 'Ready'), ('Done', 'Done')], required=True)   
-    
-    class Meta:
-        model = CardModel
-        fields = ['status']
+    def __init__(self, user, *args, **kwargs):
+        user = user
+        super().__init__(*args, **kwargs)
+        if user.is_superuser:
+            self.fields['status'].choices = [
+                ('Ready', 'Ready'),
+                ('Done', 'Done'),
+            ]
+        else:
+            self.fields['status'].choices = [
+                ('In progress', 'In progress'),
+                ('In QA', 'In QA'),
+                ('Ready', 'Ready'),
+            ]
 
 class CardStatusUpdate(forms.ModelForm):
 

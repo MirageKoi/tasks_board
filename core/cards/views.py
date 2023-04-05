@@ -8,7 +8,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 
 from django.views.generic.edit import BaseUpdateView, FormView, ProcessFormView, FormMixin
 
-from .forms import  CardCreateForm, UserCardStatusUpdate,  AdminCardStatusUpdate, CardStatusUpdate, CardUpdateForm
+from .forms import  CardCreateForm, HelperCardStatusUpdate, CardStatusUpdate, CardUpdateForm
 from .models import CardModel
 from .permissions import IsCreatorOrSuperUserCheck, IsSuperUser, IsCreator
 
@@ -28,21 +28,21 @@ class CardDetailView(DetailView):
 # TODO попробовать перенести условие в формы 
 
     def get_context_data(self, **kwargs):
+        kwargs = super().get_context_data(**kwargs)
         if self.request.user.is_superuser:
             if self.object.status in ('Ready', 'Done'):
-                kwargs['form'] = AdminCardStatusUpdate(instance=self.object)
+                kwargs['form'] = HelperCardStatusUpdate(instance=self.object, user=self.request.user)
             else:
                 kwargs['message'] = 'Task is not Ready'
         
         elif self.request.user == self.object.implementor:
             if self.object.status != 'Done':
-                kwargs['form'] = UserCardStatusUpdate(instance=self.object)
+                kwargs['form'] = HelperCardStatusUpdate(instance=self.object, user=self.request.user)
             else:
                 kwargs['message'] = 'Task is complete'
         else:
             kwargs['denied'] = True
-        return super().get_context_data(**kwargs)
-
+        return kwargs
 
 class CardCreateView(LoginRequiredMixin, CreateView):
     model = CardModel
