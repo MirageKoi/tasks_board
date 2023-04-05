@@ -14,6 +14,11 @@ from .permissions import IsCreatorOrSuperUserCheck, IsSuperUser, IsCreator
 
 from django.contrib.auth.mixins import UserPassesTestMixin
 
+from rest_framework import generics
+from .serializers import CardSerializer
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 
 
 class CardListView(ListView):
@@ -101,3 +106,11 @@ class CardStatusUpdate(BaseUpdateView):
         kwargs['user'] = self.request.user
         return kwargs
     
+
+
+class CardListAPI(generics.ListCreateAPIView):
+    queryset = CardModel.objects.all()
+    serializer_class = CardSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]

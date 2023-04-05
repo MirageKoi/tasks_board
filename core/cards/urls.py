@@ -11,4 +11,5 @@ urlpatterns = [
     path('<int:pk>/update/', views.CardUpdateView.as_view(), name='update'),
     path('<int:pk>/delete/', views.CardDeleteView.as_view(), name='delete'),
     path('<int:pk>/status/', views.CardStatusUpdate.as_view(), name='status'),
+    path('api/list/', views.CardListAPI.as_view())
 ]
