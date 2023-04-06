@@ -1,13 +1,6 @@
 from django.db import models
 
-
-# class CategoryModel(models.Model):
-#     title = models.CharField(max_length=64)
-
-#     def __str__(self) -> str:
-#         return self.title
-
-checker = ['New', 'In progress', 'In QA', 'Ready', 'Done']    
+ 
 class CardModel(models.Model):
     STATUS_CHOICES = [
         ('New', 'New'),

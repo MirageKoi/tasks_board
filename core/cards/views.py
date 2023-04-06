@@ -1,34 +1,30 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
-
-from django.views.generic.edit import BaseUpdateView, FormView, ProcessFormView, FormMixin
-
-from .forms import  CardCreateForm, HelperCardStatusUpdate, CardStatusUpdate, CardUpdateForm
-from .models import CardModel
-from .permissions import IsCreatorOrSuperUserCheck, IsSuperUser, IsCreator
-
-from django.contrib.auth.mixins import UserPassesTestMixin
-
-from rest_framework import generics
-from .serializers import CardSerializer
+from django.views.generic.edit import BaseUpdateView
+from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticated
 
+from .forms import (CardCreateForm, CardStatusUpdate, CardUpdateForm,
+                    HelperCardStatusUpdate)
+from .models import CardModel
+from .permissions import (IsCreatorOrSuperUserCheck, IsImplementorOrReadOnly,
+                          IsSuperUser)
+from .serializers import CardListSerializer, CardDetailSerializer
 
 
 class CardListView(ListView):
     model = CardModel
-    template_name = 'cardlist.html'
+    template_name = 'card_list.html'
 
 
 class CardDetailView(DetailView):
     model = CardModel
-    template_name = 'carddetail.html'
+    template_name = 'card_detail.html'
 
 # TODO попробовать перенести условие в формы 
 
@@ -49,10 +45,11 @@ class CardDetailView(DetailView):
             kwargs['denied'] = True
         return kwargs
 
+
 class CardCreateView(LoginRequiredMixin, CreateView):
     model = CardModel
     form_class = CardCreateForm
-    template_name = 'cardcreate.html'
+    template_name = 'card_create.html'
     success_url = reverse_lazy('cards:cardlist')
 
     def get_form_kwargs(self):
@@ -65,10 +62,10 @@ class CardCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
     
 
-class CardUpdateView(IsCreatorOrSuperUserCheck, UpdateView):
+class CardUpdateView(LoginRequiredMixin, IsCreatorOrSuperUserCheck, UpdateView):
     model = CardModel
     form_class = CardUpdateForm
-    template_name = 'cardcreate.html'
+    template_name = 'card_update.html'
     success_url = reverse_lazy('cards:cardlist')
 
     def get_form_kwargs(self):
@@ -76,15 +73,8 @@ class CardUpdateView(IsCreatorOrSuperUserCheck, UpdateView):
         kwargs['user'] = self.request.user.is_superuser
         return kwargs
 
-    # def get_form_class(self):
-    #     if self.request.user.is_superuser:
-    #         self.form_class = AdminCardUpdateForm
-    #     else:
-    #         self.form_class = UserCardUpdateForm
-    #     return super().get_form_class()
-    
 
-class CardDeleteView(IsSuperUser, DeleteView):
+class CardDeleteView(LoginRequiredMixin, IsSuperUser, DeleteView):
     model = CardModel
     template_name = 'task_confirm_delete.html'
     success_url = reverse_lazy('cards:cardlist')
@@ -94,8 +84,7 @@ class CardDeleteView(IsSuperUser, DeleteView):
         return super(CardDeleteView,self).form_valid(form)
     
 
-# View for changing card status
-class CardStatusUpdate(BaseUpdateView):
+class CardStatusUpdate(LoginRequiredMixin, BaseUpdateView):
     http_method_names = ['post']
     model = CardModel
     form_class = CardStatusUpdate
@@ -106,11 +95,30 @@ class CardStatusUpdate(BaseUpdateView):
         kwargs['user'] = self.request.user
         return kwargs
     
-
-
+'''========================================================================================================'''
 class CardListAPI(generics.ListCreateAPIView):
     queryset = CardModel.objects.all()
-    serializer_class = CardSerializer
+    serializer_class = CardListSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['status']
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
+
+class CardDetailAPI(generics.RetrieveUpdateAPIView):
+    queryset = CardModel.objects.all()
+    serializer_class = CardDetailSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [permissions.IsAdminUser]
+
+
+
+
+class CardDeleteAPI(generics.DestroyAPIView):
+    queryset = CardModel.objects.all()
+    serializer_class = CardListSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [permissions.IsAdminUser]

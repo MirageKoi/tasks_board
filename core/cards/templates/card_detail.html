@@ -2,14 +2,15 @@
 
 {% block content %}
 
+<div class="center card">
+<p>Title: {{ object.title }}</p>
+<p>Text: {{ object.text }}</p>
+<p>Creator: {{ object.creator }}</p>
+<p>Implementor: {{ object.implementor }}</p>
+<p>Created: {{ object.created }}</p>
+<p>Updated: {{ object.updated }}</p>
+<p>Status: {{ object.status }}</p>
 
-{{ object.title }}<br>
-{{ object.text }}<br>
-{{ object.status }}<br>
-{{ object.creator }}<br>
-{{ object.implementor }}<br>
-{{ object.created }}<br>
-{{ object.updated }}<br>
 
 
 {% comment %} <form method="post" action="{% url "purchase:purchase_add" object.slug %}">
@@ -20,10 +21,13 @@
 <button type="submit">Send</button>
 </form> {% endcomment %}
 
+{% if user.is_superuser or object.creator == user %}
+<a href="{% url 'cards:update' object.pk %}">EDIT</a>
+{% endif %}
+{% if user.is_superuser %}
+<a href="{% url 'cards:delete' object.pk %}">DELETE</a>
+{% endif %}
 
-<a href="{% url "cards:update" object.pk %}">EDIT</a>
-<a href="{% url 'cards:delete' object.pk  %}">DELETE </a>
-<br>
 {{ message }}
 {% if not message and not denied %}
 <form method="post" action="{% url 'cards:status' object.pk %}"">
@@ -33,4 +37,5 @@
   </form>
 {% endif %}
 
+</div>
 {% endblock content %}

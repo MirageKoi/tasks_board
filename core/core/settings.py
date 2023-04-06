@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
+    'djoser',
 
     'users.apps.UsersConfig',
     'cards.apps.CardsConfig',
@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 
     'users.middleware.NonAdminSessionMiddleware',
-    # 'users.middleware.ExpiredTokenMiddleware',
+    'users.middleware.AuthRedirectMiddleware',
 
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -158,3 +158,8 @@ REST_FRAMEWORK = {
 }
 
 REST_FRAMEWORK_TOKEN_EXPIRE_TIME = 5
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static"
+]
+

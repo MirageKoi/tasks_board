@@ -1,8 +1,9 @@
+from datetime import timedelta
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
-
-from datetime import timedelta
+from django.urls import reverse
 from django.utils import timezone
 from rest_framework.authtoken.models import Token
 
@@ -31,19 +32,13 @@ class NonAdminSessionMiddleware:
         return response
     
 
-class ExpiredTokenMiddleware:
+class AuthRedirectMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        response = self.get_response(request)
-
         if request.user.is_authenticated:
-            last_activity = request.session.get('last_activity')
-            if last_activity and timezone.now() - last_activity > timezone.timedelta(minutes=1):
-                # Refresh token
-                Token.objects.filter(user=request.user).delete()
-                Token.objects.create(user=request.user)
-            request.session['last_activity'] = timezone.now()
-
+            if request.path == reverse('users:signup') or request.path == reverse('users:signin'):
+                return redirect('/')
+        response = self.get_response(request)
         return response

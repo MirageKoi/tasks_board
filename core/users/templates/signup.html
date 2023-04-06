@@ -1,18 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div>
+{% extends "base.html" %}
+{% block content %}
+  <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <main class="col-10 col-xs-10 col-sm-9 col-md-5 col-xl-4">
+        <h1 class="h3 text-uppercase text-center mb-4">Register new user</h1>
         <form method="post">
-        {{ form.as_div }}
-        {% csrf_token %}
-        <button type="submit">pook</button>
+          {% csrf_token %}
+          <div class="form-floating mb-3">
+            {{ form.username }}
+            <label for="{{ form.username.id_for_label }}" class="form-label">
+              <i class="bi bi-person"></i>&nbsp;{{ form.username.label }}
+            </label>
+          </div>
+          <div class="form-floating mb-3">
+            {{ form.email }}
+            <label for="{{ form.email.id_for_label }}" class="form-label">
+              <i class="bi bi-envelope"></i>&nbsp;{{ form.email.label }}
+            </label>
+          </div>
+          <div class="form-floating mb-3">
+            {{ form.password1 }}
+            <label for="{{ form.password1.id_for_label }}" class="form-label">
+              <i class="bi bi-key"></i>&nbsp;{{ form.password1.label }}
+            </label>
+          </div>
+          <div class="form-floating mb-3">
+            {{ form.password2 }}
+            <label for="{{ form.password2.id_for_label }}" class="form-label">
+              <i class="bi bi-lock"></i>&nbsp;{{ form.password2.label }}
+            </label>
+          </div>
+          <div class="text-center mb-3">
+            Already have an account?&nbsp;<a href="{% url 'users:signin' %}" class="text-decoration-none">Sign In!</a>
+          </div>
+          <div class="d-flex justify-content-center mb-3">
+            <button href="" class="btn btn-lg btn-primary">Sign Up</button>
+          </div>
         </form>
+      </main>
     </div>
-</body>
-</html>
+  </div>
+{% endblock content %}

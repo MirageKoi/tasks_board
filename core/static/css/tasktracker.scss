@@ -1,0 +1,92 @@
+.container {
+  padding-top: 5rem;
+}
+
+#taskList {
+  td:nth-child(3) {
+    width: 25%;
+  }
+}
+
+.task.task-completed {
+  .summary {
+    a {
+      color: var(--bs-secondary);
+      text-decoration: line-through;
+    }
+  }
+}
+
+.assignee {
+  div {
+    span:nth-child(2) {
+      text-wrap: avoid;
+    }
+  }
+}
+
+.actions {
+
+  .btn.disabled {
+    color: var(--bs-secondary) !important;
+  }
+
+  .btn[data-action=complete] {
+    color: var(--bs-success)
+  }
+
+  .btn[data-action=reopen] {
+    color: var(--bs-primary)
+  }
+
+  .btn[data-action=delete] {
+    color: var(--bs-danger)
+  }
+}
+
+.task-container {
+  position: relative;
+  max-height: 75vh;
+}
+
+.scroll-area {
+  overflow: auto;
+}
+
+#taskActionsContainer {
+  .btn {
+    min-width: 7vw;
+    margin: 0 0 0 0.5rem;
+  }
+
+  .btn.task-action {
+    min-width: 10vw;
+  }
+
+  .btn.task-action[data-action=complete]::after {
+    content: " Complete"
+  }
+
+  .btn.task-action[data-action=reopen]::after {
+    content: " Reopen"
+  }
+}
+
+.comment-author {
+  flex-direction: row-reverse;
+
+  .author, small {
+    text-align: end;
+  }
+}
+
+.comment {
+  img {
+    height: 64px;
+    width: auto;
+  }
+
+  .author {
+    text-decoration: underline;
+  }
+}

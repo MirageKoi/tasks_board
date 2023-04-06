@@ -2,7 +2,7 @@
 {% block content %}
     {% comment %} {% for object in object_list %}
         <div>
-            <a href="{{ object.pk }}"><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></a>
+            <a href="{{ object.pk }}"><a href="{{ object.pk }}">{{ object.title }} Imp:{{ object.implementor }}</a></a>
                 {{ object.description }}
                 {{ object.price }}
             </div>
@@ -15,7 +15,7 @@
             <h2>New</h2>
             {% for object in object_list %}
               {% if object.status == 'New' %}
-                <p><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></p>
+                <p><a href="{{ object.pk }}">{{ object.title }}<br>Cr:{{ object.creator }} Imp:{{ object.implementor }}</a></p>
               {% endif %}
             {% endfor %}
           </div>
@@ -23,7 +23,7 @@
             <h2>In progress</h2>
             {% for object in object_list %}
               {% if object.status == 'In progress' %}
-                <p><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></p>
+                <p><a href="{{ object.pk }}">{{ object.title }}<br>Cr:{{ object.creator }} Imp:{{ object.implementor }}</a></p>
               {% endif %}
             {% endfor %}
           </div>
@@ -31,7 +31,7 @@
             <h2>In QA</h2>
             {% for object in object_list %}
               {% if object.status == 'In QA' %}
-                <p><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></p>
+                <p><a href="{{ object.pk }}">{{ object.title }}<br>Cr:{{ object.creator }} Imp:{{ object.implementor }}</a></p>
               {% endif %}
             {% endfor %}
           </div>
@@ -39,7 +39,7 @@
             <h2>Ready</h2>
             {% for object in object_list %}
               {% if object.status == 'Ready' %}
-                <p><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></p>
+                <p><a href="{{ object.pk }}">{{ object.title }}<br>Cr:{{ object.creator }} Imp:{{ object.implementor }}</a></p>
               {% endif %}
             {% endfor %}
           </div>
@@ -47,12 +47,11 @@
             <h2>Done</h2>
             {% for object in object_list %}
               {% if object.status == 'Done' %}
-                <p><a href="{{ object.pk }}">{{ object.title }} >>> {{ object.implementor }}</a></p>
+                <p><a href="{{ object.pk }}">{{ object.title }}<br>Cr:{{ object.creator }} Imp:{{ object.implementor }}</a></p>
               {% endif %}
             {% endfor %}
           </div>
         </div>
       </div>
 
-    <a href="{% url "cards:create" %}">Create New</a>
 {% endblock content %}
