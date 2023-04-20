@@ -16,5 +16,5 @@ urlpatterns = [
 urlpatterns += [
     path('api/list/', views.CardListAPI.as_view()),
     path('api/list/<int:pk>/', views.CardDetailAPI.as_view()),
-    # path('api/list/<int:pk>/delete/', views.CardDeleteAPI.as_view()),
+    path('api/list/<int:pk>/delete/', views.CardDeleteAPI.as_view()),
 ]

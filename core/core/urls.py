@@ -23,5 +23,5 @@ urlpatterns = [
     path('', include('cards.urls', namespace='cards')),
     path('', TemplateView.as_view(template_name="base.html"), name="homepage"),
     path('', include('users.urls', namespace='users')),
-    
+
 ]

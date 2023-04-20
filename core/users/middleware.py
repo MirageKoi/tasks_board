@@ -31,14 +31,3 @@ class NonAdminSessionMiddleware:
             response = self.get_response(request)
         return response
     
-
-class AuthRedirectMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        if request.user.is_authenticated:
-            if request.path == reverse('users:signup') or request.path == reverse('users:signin'):
-                return redirect('/')
-        response = self.get_response(request)
-        return response
